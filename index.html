@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>memverge 部署文档 - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="search/main.js"></script>
+  
+
+  
+
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#memverge">memverge 部署文档</a></li>
+              
+                  <li><a href="#_1">概述</a></li>
+                  
+              
+                  <li><a href="#_2">前提条件</a></li>
+                  
+              
+                  <li><a href="#_3">计费说明</a></li>
+                  
+              
+                  <li><a href="#_4">服务架构</a></li>
+                  
+              
+                  <li><a href="#_5">参数说明</a></li>
+                  
+              
+                  <li><a href="#_6">部署流程</a></li>
+                  
+              
+                  <li><a href="#_7">服务激活</a></li>
+                  
+              
+                  <li><a href="#_8">服务使用</a></li>
+                  
+              
+                  <li><a href="#_9">联系我们</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="memverge">memverge 部署文档</h1>
+<h2 id="_1">概述</h2>
+<p>Memory Machine Cloud(MMC)为公有云用户提供更加简单、高效、省钱的云平台解决方案，基于WaveRider智能选配云主机和SpotSurfer断点续算两大核心能力实现云成本降低70%，性能提升50%。</p>
+<p>本文档介绍基于计算巢如何快速部署并使用MMC。</p>
+<h2 id="_2">前提条件</h2>
+<p>部署MMC实例服务实例，需要对部分阿里云资源进行访问和创建操作。因此您的账号需要包含如下资源的权限。 说明：当您的账号是RAM账号时，才需要添加此权限。</p>
+<table>
+<thead>
+<tr>
+<th><font style="color:rgb(51, 51, 51);">权限策略名称</font></th>
+<th><font style="color:rgb(51, 51, 51);">备注</font></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">AliyunECSFullAccess</font></td>
+<td><font style="color:rgb(51, 51, 51);">管理云服务器服务（ECS）的权限</font></td>
+</tr>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">AliyunROSFullAccess</font></td>
+<td><font style="color:rgb(51, 51, 51);">管理资源编排服务（ROS）的权限</font></td>
+</tr>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">AliyunComputeNestUserFullAccess</font></td>
+<td><font style="color:rgb(51, 51, 51);">管理计算巢服务（ComputeNest）的用户侧权限</font></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">计费说明</h2>
+<p>MMC在计算巢部署的费用主要涉及：</p>
+<ul>
+<li>弹性云主机（ECS）费用</li>
+<li>对象存储（OOS）费用</li>
+<li>通过MMC控制节点，动态弹性创建的ECS的费用，这部分费用在MMC控制台页面可以清晰看到</li>
+</ul>
+<h2 id="_4">服务架构</h2>
+<p><img alt="img.png" src="img.png" /></p>
+<h2 id="_5">参数说明</h2>
+<table>
+<thead>
+<tr>
+<th><font style="color:rgb(51, 51, 51);">参数组</font></th>
+<th><font style="color:rgb(51, 51, 51);">参数项</font></th>
+<th><font style="color:rgb(51, 51, 51);">说明</font></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">服务实例</font></td>
+<td><font style="color:rgb(51, 51, 51);">服务实例名称</font></td>
+<td><font style="color:rgb(51, 51, 51);">长度不超过64个字符，必须以英文字母开头，可包含数字、英文字母、短划线（-）和下划线（_）</font></td>
+</tr>
+<tr>
+<td></td>
+<td><font style="color:rgb(51, 51, 51);">地域</font></td>
+<td><font style="color:rgb(51, 51, 51);">服务实例部署的地域</font></td>
+</tr>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">OpCenter配置</font></td>
+<td><font style="color:rgb(51, 51, 51);">OpCenter机型</font></td>
+<td><font style="color:rgb(51, 51, 51);">MMC控制节点的机器型号</font></td>
+</tr>
+<tr>
+<td></td>
+<td><font style="color:rgb(51, 51, 51);">主机登录秘钥对</font></td>
+<td>秘钥对用于弹性扩缩启动ECS</td>
+</tr>
+<tr>
+<td></td>
+<td>数据盘大小</td>
+<td>opCenter数据盘大小</td>
+</tr>
+<tr>
+<td></td>
+<td>DB盘大小</td>
+<td>opCenterDB盘大小</td>
+</tr>
+<tr>
+<td></td>
+<td>磁盘类型</td>
+<td>opCenter磁盘类型</td>
+</tr>
+<tr>
+<td><font style="color:rgb(51, 51, 51);">网络配置</font></td>
+<td><font style="color:rgb(51, 51, 51);">可用区</font></td>
+<td><font style="color:rgb(51, 51, 51);">ECS实例所在可用区</font></td>
+</tr>
+<tr>
+<td></td>
+<td><font style="color:rgb(51, 51, 51);">VPC ID</font></td>
+<td><font style="color:rgb(51, 51, 51);">资源所在VPC</font></td>
+</tr>
+<tr>
+<td></td>
+<td><font style="color:rgb(51, 51, 51);">交换机ID</font></td>
+<td><font style="color:rgb(51, 51, 51);">资源所在交换机</font></td>
+</tr>
+<tr>
+<td></td>
+<td><font style="color:rgb(51, 51, 51);">mvPublicService</font></td>
+<td>是否提供公网</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_6">部署流程</h2>
+<p>访问计算巢MMC部署链接，选择套餐、配置参数后，确认订单：
+<img alt="img_1.png" src="img_1.png" /></p>
+<p>2 确认订单后可以看到云资源价格预览，以及依赖的权限检查结果：
+<img alt="img_2.png" src="img_2.png" /></p>
+<p>点击立即创建：
+<img alt="img_3.png" src="img_3.png" />
+点击「去列表查看」可以看到服务实例部署的详细进度如下：
+<img alt="img_4.png" src="img_4.png" />
+完成部署后点击服务连接进入详情页面：
+<img alt="img_5.png" src="img_5.png" />
+点击详情页面的OpCenter登录地址，即可登录：
+<img alt="img_6.png" src="img_6.png" /></p>
+<h2 id="_7">服务激活</h2>
+<p>打开试用注册地址：https://cn.mmcloud.io/customer/register ，申请试用License：
+<img alt="img_7.png" src="img_7.png" />
+填写试用信息之后点击注册，注册完成后到邮箱完成激活。</p>
+<p>激活后到MMC控制台页面，输入用户名和密码完成激活，激活后试用周期为一个月。</p>
+<p><img alt="img_8.png" src="img_8.png" /></p>
+<p>激活之后页面显式状态为:</p>
+<p><img alt="img_9.png" src="img_9.png" /></p>
+<h2 id="_8">服务使用</h2>
+<p>本示例通过使用blast:latest镜像，执行一个数据处理的任务为例，演示MMC的任务调度、成本分析等核心功能。</p>
+<p>点击页面「创建任务」按钮：</p>
+<p><img alt="img_10.png" src="img_10.png" /></p>
+<p>上述自定义脚本具体内容为：</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# This is a demo script for using bwa application
+# To run this job
+#   float submit -i bwa -j &lt;this_script&gt; --cpu 4 --mem 16 --dataVolume [size=64]:/data
+
+export PATH=/opt/aliyun:$PATH
+
+LOG_FILE=${FLOAT_LOG_PATH}/output
+touch ${LOG_FILE}
+exec &gt;$LOG_FILE 2&gt;&amp;1
+
+cd /BWA_BASE
+
+# download and unzip dataset
+echo &quot;Downloading dataset ...&quot;
+wget https://public-ehpc-package.oss-cn-hangzhou.aliyuncs.com/lifescience/b37_human_g1k_v37.fasta
+wget https://public-ehpc-package.oss-cn-hangzhou.aliyuncs.com/lifescience/gatk-examples_example1_NA20318_ERR250971_1.filt.fastq.gz
+gunzip gatk-examples_example1_NA20318_ERR250971_1.filt.fastq.gz
+wget https://public-ehpc-package.oss-cn-hangzhou.aliyuncs.com/lifescience/gatk-examples_example1_NA20318_ERR250971_2.filt.fastq.gz
+gunzip gatk-examples_example1_NA20318_ERR250971_2.filt.fastq.gz
+
+# workload start
+echo &quot;bwa index start ...&quot;
+bwa index b37_human_g1k_v37.fasta
+
+echo &quot;samtools start ...&quot;
+samtools faidx b37_human_g1k_v37.fasta
+
+echo &quot;bwa mem start ...&quot;
+bwa mem -t 16 -R '@RG\tID:ehpc\tPL:illumina\tLB:library\tSM:b37' b37_human_g1k_v37.fasta \
+    gatk-examples_example1_NA20318_ERR250971_1.filt.fastq gatk-examples_example1_NA20318_ERR250971_2.filt.fastq \
+    | samtools view -S -b - &gt; ERR250971.bam
+
+# workload end
+
+NOW=$(date +&quot;%Y-%m-%d_%H:%M:%S&quot;)
+echo &quot;Upload result ...&quot;
+#ossutil64 cp ${LOG_FILE} $OSS_BUCKET/bwa-output/${NOW}_LOG
+#ossutil64 cp ERR250971.bam $OSS_BUCKET/bwa-output/${NOW}_ERR250971.bam
+</code></pre>
+<p>完成配置后点击「提交」按钮，完成任务提交。
+<img alt="img_11.png" src="img_11.png" />
+「费用总结」部分可以看到花费的费用：
+<img alt="img_12.png" src="img_12.png" /></p>
+<h2 id="_9">联系我们</h2>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2024-11-19 07:40:38.833616+00:00
+  -->
+</body>
+</html>
