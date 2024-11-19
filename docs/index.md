@@ -55,17 +55,19 @@ MMC在计算巢部署的费用主要涉及：
 ![img_5.png](img_5.png)
 点击详情页面的OpCenter登录地址，即可登录：
 ![img_6.png](img_6.png)
-服务激活
-，打开试用地址：https://cn.mmcloud.io/customer/register ，申请试用License：
+## 服务激活
+打开试用注册地址：https://cn.mmcloud.io/customer/register ，申请试用License：
 ![img_7.png](img_7.png)
 填写试用信息之后点击注册，注册完成后到邮箱完成激活。
-完成激活之后再MMC控制台页面输入用户名和密码完成激活，激活后试用周期为一个月。
+
+激活后到MMC控制台页面，输入用户名和密码完成激活，激活后试用周期为一个月。
 
 ![img_8.png](img_8.png)
 
 激活之后页面显式状态为:
 
 ![img_9.png](img_9.png)
+
 ## 服务使用
 本示例通过使用blast:latest镜像，执行一个数据处理的任务为例，演示MMC的任务调度、成本分析等核心功能。
 
